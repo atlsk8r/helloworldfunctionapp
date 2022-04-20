@@ -59,7 +59,7 @@ resource "azurerm_function_app" "function_app" {
   site_config {
     use_32_bit_worker_process = true
     always_on = true
-    dotnet_framework_version = v6.0
+    dotnet_framework_version = "v6.0"
   }
   storage_account_name       = azurerm_storage_account.storage_account.name
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
@@ -88,7 +88,7 @@ resource "azurerm_function_app_slot" "function_app_slot" {
   site_config {
     use_32_bit_worker_process = true
     always_on = true
-    dotnet_framework_version = v6.0
+    dotnet_framework_version = "v6.0"
   }
   storage_account_name       = azurerm_storage_account.storage_account.name
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key

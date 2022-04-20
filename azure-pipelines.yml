@@ -44,11 +44,10 @@ stages:
         TF_VAR_imagebuild: $(tag)
 - stage: Build
   displayName: Build stage
-
+  dependsOn: Provision
   jobs:
   - job: Build
     displayName: Build
-    dependsOn: Provision
     pool:
       vmImage: $(vmImageName)
 

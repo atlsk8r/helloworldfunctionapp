@@ -2,6 +2,16 @@ provider "azurerm" {
     features {}
 }
 
+#[gst] - work out better method of container/key sharing across builds
+terraform {
+  backend "azurerm" {                           
+      resource_group_name = "tf_rg_blobstore"
+      storage_account_name = "tfstorageaccountgtinney"
+      container_name = "tfstatefnapp"
+      key = "terraform.tfstate"
+  }
+}   
+
 resource "azurerm_resource_group" "resource_group" {
   name = "${var.project}-${var.environment}-resource-group"
   location = var.location

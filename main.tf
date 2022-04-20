@@ -41,9 +41,9 @@ resource "azurerm_function_app" "function_app" {
   location                   = var.location
   app_service_plan_id        = azurerm_app_service_plan.app_service_plan.id
   app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE" = "",
-    "FUNCTIONS_WORKER_RUNTIME" = "node",
-    "WEBSITE_NODE_DEFAULT_VERSION": "~14"
+    "WEBSITE_RUN_FROM_PACKAGE" = "1",
+    "FUNCTIONS_WORKER_RUNTIME" = "dotnet",
+    "AzureWebJobsDisableHomepage" = "true",
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.application_insights.instrumentation_key,
   }
   site_config {
@@ -53,6 +53,7 @@ resource "azurerm_function_app" "function_app" {
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
   version                    = "~4"
 
+  #need below?
   lifecycle {
     ignore_changes = [
       app_settings["WEBSITE_RUN_FROM_PACKAGE"],
@@ -60,12 +61,39 @@ resource "azurerm_function_app" "function_app" {
   }
 }
 
-output "function_app_name" {
-  value = azurerm_function_app.function_app.name
-  description = "Deployed function app name"
+resource "azurerm_function_app_slot" "function_app" {
+  name                       = "${var.project}-${var.environment}-function-app-staging"
+  resource_group_name        = azurerm_resource_group.resource_group.name
+  location                   = var.location
+  app_service_plan_id        = azurerm_app_service_plan.app_service_plan.id
+  app_settings = {
+    "WEBSITE_RUN_FROM_PACKAGE" = "1",
+    "FUNCTIONS_WORKER_RUNTIME" = "dotnet",
+    "AzureWebJobsDisableHomepage" = "true",
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.application_insights.instrumentation_key,
+  }
+  site_config {
+    use_32_bit_worker_process = true
+  }
+  storage_account_name       = azurerm_storage_account.storage_account.name
+  storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
+  version                    = "~4"
+
+  #need below?
+  lifecycle {
+    ignore_changes = [
+      app_settings["WEBSITE_RUN_FROM_PACKAGE"],
+    ]
+  }
 }
 
-output "function_app_default_hostname" {
-  value = azurerm_function_app.function_app.default_hostname
-  description = "Deployed function app hostname"
-}
+
+#output "function_app_name" {
+#  value = azurerm_function_app.function_app.name#
+#  description = "Deployed function app name"
+#}
+
+#output "function_app_default_hostname" {
+#  value = azurerm_function_app.function_app.default_hostname
+#  description = "Deployed function app hostname"
+#}

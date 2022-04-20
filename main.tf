@@ -61,11 +61,12 @@ resource "azurerm_function_app" "function_app" {
   }
 }
 
-resource "azurerm_function_app_slot" "function_app" {
+resource "azurerm_function_app_slot" "function_app_slot" {
   name                       = "${var.project}-${var.environment}-function-app-staging"
   resource_group_name        = azurerm_resource_group.resource_group.name
   location                   = var.location
   app_service_plan_id        = azurerm_app_service_plan.app_service_plan.id
+  function_app_name          = azurerm_function_app.function_app.name
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = "1",
     "FUNCTIONS_WORKER_RUNTIME" = "dotnet",
